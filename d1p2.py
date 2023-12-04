@@ -1,4 +1,4 @@
-import re
+import regex
 
 '''
 # day 1 part 2
@@ -30,30 +30,33 @@ with open('puzzle-input.txt') as file:
 
 main_numbers_list = []
 
-def get_numbers(line):
+# takes a line from the puzzle input as an argument
+# returns the number for that line corresponding to (first_number + last_number)
+def get_line_number(line):
+    # result_number is the first and last number of the line
+    # combined to make a single number
+    # list of ints after converting the string version of the numbers
+    numbers_in_line = []
     # regex to find either digits or spelled out numbers
-    numbers_regex = re.compile('(zero|one|two|three|four|five|six|seven|eight|nine|\d)')
+    numbers_regex = regex.compile('(zero|one|two|three|four|five|six|seven|eight|nine|\d)')
     # list of all numbers in the line
-    numbers_in_line = numbers_regex.findall(line)
-    for number in numbers_in_line:
+    #matches_in_line = numbers_regex.findall(line, overlapped=True)
+    matches_in_line = numbers_regex.findall(line, overlapped=False)
+    for number in matches_in_line:
         if number.isdigit():
-            continue
+            numbers_in_line.append(int(number))
         else:
-            #does this edit the list in place?
-            # or do i need to create new variable?
-            number = numbers[number]
-    return numbers_list
+            numbers_in_line.append(int(numbers[number]))
+    result_number = str(numbers_in_line[0]) + str(numbers_in_line[-1])
+    #print(f"{line}:{result_number}")
+    return int(result_number)
+
+# list that each of the line results will be added to, then summed
+results_list = []
 
 for line in calibration_data:
     # get list of numbers in the line
-    numbers_on_current_line = get_numbers(line)
-    x = str(numbers_on_current_line[0])
-    y = str(numbers_on_current_line[-1])
-    # this concatenates the first and last number in the line
-    line_number = x + y
-    # cast the concatenated number to an int and add it to the main list
-    main_numbers_list.append(int(line_number))
+    current_line_number = get_line_number(line)
+    results_list.append(current_line_number)
 
-# sum all the numbers in the list
-total = sum(main_numbers_list)
-print(total)
+print(sum(results_list))
