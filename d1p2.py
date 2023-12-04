@@ -11,6 +11,19 @@ xtwone3four:24
 zoneight234:14
 7pqrstsixteen:76
 '''
+numbers = {
+    'zero':0,
+    'one':1,
+    'two':2,
+    'three':3,
+    'four':4,
+    'five':5,
+    'six':6,
+    'seven':7,
+    'eight':8,
+    'nine':9
+    }
+
 
 with open('puzzle-input.txt') as file:
     calibration_data = [line.strip() for line in file]
@@ -21,28 +34,14 @@ def get_numbers(line):
     # regex to find either digits or spelled out numbers
     numbers_regex = re.compile('(zero|one|two|three|four|five|six|seven|eight|nine|\d)')
     # list of all numbers in the line
-    numbers_list = numbers_regex.findall(line)
-    for number in numbers_list:
-        if number == 'zero':
-            numbers_list[numbers_list.index(number)] = 0
-        elif number == 'one':
-            numbers_list[numbers_list.index(number)] = 1
-        elif number == 'two':
-            numbers_list[numbers_list.index(number)] = 2
-        elif number == 'three':
-            numbers_list[numbers_list.index(number)] = 3
-        elif number == 'four':
-            numbers_list[numbers_list.index(number)] = 4
-        elif number == 'five':
-            numbers_list[numbers_list.index(number)] = 5
-        elif number == 'six':
-            numbers_list[numbers_list.index(number)] = 6
-        elif number == 'seven':
-            numbers_list[numbers_list.index(number)] = 7
-        elif number == 'eight':
-            numbers_list[numbers_list.index(number)] = 8
-        elif number == 'nine':
-            numbers_list[numbers_list.index(number)] = 9
+    numbers_in_line = numbers_regex.findall(line)
+    for number in numbers_in_line:
+        if number.isdigit():
+            continue
+        else:
+            #does this edit the list in place?
+            # or do i need to create new variable?
+            number = numbers[number]
     return numbers_list
 
 for line in calibration_data:
