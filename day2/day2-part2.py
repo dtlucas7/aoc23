@@ -60,4 +60,23 @@ for game in games:
 # the list(set()) is to uniq the list
 possible_game_ids = list(set([game['game_id'] for game in games if game['game_id'] not in impossible_game_ids]))
 
-print(possible_game_ids)
+power_list = []
+
+for id in possible_game_ids:
+    current_game = [game for game in games if game['game_id'] == id][0]
+
+    # get the minimum number of red, green, and blue dice
+    min_red     = max([roll['red'] for roll in current_game['rolls']])
+    min_green   = max([roll['green'] for roll in current_game['rolls']])
+    min_blue    = max([roll['blue'] for roll in current_game['rolls']])
+
+    power_value = min_red * min_green * min_blue
+    
+    power_list.append(power_value)
+
+    print(f"Game {current_game['game_id']} requires at least {min_red} red, {min_green} green, and {min_blue} blue dice")
+    print(f"Power value: {power_value}")
+
+part_2_solution = sum(power_list)
+print(power_list)
+print(f"Part 2 solution: {part_2_solution}")
