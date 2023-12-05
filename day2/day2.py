@@ -62,9 +62,4 @@ possible_game_ids = list(set([game['game_id'] for game in games if game['game_id
 
 part_1_solution = sum(possible_game_ids)
 
-print(f'Possible game IDs: {possible_game_ids}')
-
-print(f'possible game id: {possible_game_ids[0]}')
-
-test_id = possible_game_ids[0] # 3
-print(games[test_id - 1])
+print(f'Part 1 solution: {part_1_solution}')
