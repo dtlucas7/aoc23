@@ -1,108 +1,86 @@
-import re
+import regex as re
 import json
 
 with open('./puzzle-input-day2.txt') as file:
     puzzle_data = [line.strip() for line in file]
 
-games = [
-    {
-        'game_id': int,
-        'rolls': 
-            [
-                {
-                    'roll_id':  int,
-                    'red':      int,
-                    'green':    int,
-                    'blue':     int
-                }
-            ]
-    }
-]
+RED_MAX     = 12
+GREEN_MAX   = 13
+BLUE_MAX    = 14
+
+# list of game objects
+games = []
 
 # list of IDs of games that are possible
 possible_game_ids = []
 
-def is_game_possible(game_object):
-    # this is where the values of each cube are checked
-    # to make sure they are less than the max value for each color
-    pass
+def game_is_possible(game):
+    print(f"total rolls in game {game['game_id']}: {len(game['rolls'])}")
+    for roll in game['rolls']:
+        print(roll)
 
-# parsed game object
-game_object = {
-    'game_id': int,
-    'rolls': 
-        [
-            {
-                'roll_id':  int,
-                'red':      int,
-                'green':    int,
-                'blue':     int
-            }
-        ]
-}
+def get_game_id(game):
+    game_id = int(str(game.split(':')).split(' ')[1].strip('\','))
+    return game_id
 
-for game in puzzle_data:
+def get_game_rolls(game):
+    # one "roll" will have all of the following fields
+    roll_object = {
+        'red':      int,
+        'green':    int,
+        'blue':     int
+    }
+    # rolls for a single game
+    rolls = []
 
-    # 2 fields -> game ID and game data
-    game_fields = game.split(':')
+    # everything to the right of the colon represents a single game
+    game_data = game.split(':')[1].strip()
 
-    # the field before the colon
-    game_id = int(str(game_fields).split(' ')[1].strip('\','))
+    # splits the data to the right of the colon
+    # each item is a roll
+    rolls_original = game_data.split(';')
 
-    # the field after the colon
-    # game_data will be split by the semi-colon into rolls
-    game_data = game_fields[1].strip()
-
-    # each roll will be split by the comma into colors
-    rolls = game_data.split(';')
-
-    #debug
-    print(f"Game ID: {game_id}")
-
-    for roll_id,roll in enumerate(rolls):
-        roll_object = {
-            'roll_id':  int,
-            'red':      int,
-            'green':    int,
-            'blue':     int
-        }
-        # strip whitespace
-        roll = roll.strip()
-        # each roll will be split by the comma into colors
-        colors = roll.split(',')
+    # iterate through each "roll" string and put result in a proper dict
+    # sample "roll" string: 6 blue, 7 red, 11 green
+    for roll in rolls_original:
 
         red_search = re.search(r'(\d+) red', roll)
-        
+        green_search = re.search(r'(\d+) green', roll)
+        blue_search = re.search(r'(\d+) blue', roll)
+
         if red_search:
-            #print(red_search.group(1))
             red_value = int(red_search.group(1))
         else:
             red_value = 0
-        
-        green_search = re.search(r'(\d+) green', roll)
-        
         if green_search:
-            #print(green_search.group(1))
             green_value = int(green_search.group(1))
         else:
             green_value = 0
-        
-        blue_search = re.search(r'(\d+) blue', roll)
-        
         if blue_search:
-            #print(blue_search.group(1))
             blue_value = int(blue_search.group(1))
         else:
             blue_value = 0
-        
-        roll_object['roll_id'] = roll_id
-        roll_object['red'] = red_value
+
+        roll_object['blue']  = blue_value
         roll_object['green'] = green_value
-        roll_object['blue'] = blue_value
-        game_object['rolls'].append(roll_object)
-    
+        roll_object['red']   = red_value
+        
+        rolls.append(roll_object)
+
+    return rolls
+
+for input_game in puzzle_data:
+
+    game_object = {
+        'game_id':  get_game_id(input_game),    # int
+        'rolls':    get_game_rolls(input_game)  # list of roll objects
+    }
+
     games.append(game_object)
 
-for game in games:
-    print(game)
-    print('\n')
+print(f"total games played: {len(games)}")
+
+# just printing the last game while I debug the rolls all being the same
+print(games[-1])
+
+print(f"possible_game_ids: {possible_game_ids}")
