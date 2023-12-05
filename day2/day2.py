@@ -11,39 +11,21 @@ BLUE_MAX    = 14
 # list of game objects
 games = []
 
-# list of IDs of games that are possible
-possible_game_ids = []
+# list of IDs of games that are impossible
+impossible_game_ids = []
 
-def game_is_possible(game):
-    print(f"total rolls in game {game['game_id']}: {len(game['rolls'])}")
-    for roll in game['rolls']:
-        print(roll)
-
-def get_game_id(game):
-    game_id = int(str(game.split(':')).split(' ')[1].strip('\','))
-    return game_id
-
-def get_game_rolls(game):
-    # one "roll" will have all of the following fields
-    roll_object = {
-        'red':      int,
-        'green':    int,
-        'blue':     int
+for game_id, game in enumerate(puzzle_data, start=1):
+    
+    game_object = {
+        'game_id': game_id,
+        'rolls': []
     }
-    # rolls for a single game
-    rolls = []
+    
+    # list of rolls for the current game
+    current_game_rolls = game.split(':')[1].strip().split(';')
 
-    # everything to the right of the colon represents a single game
-    game_data = game.split(':')[1].strip()
-
-    # splits the data to the right of the colon
-    # each item is a roll
-    rolls_original = game_data.split(';')
-
-    # iterate through each "roll" string and put result in a proper dict
-    # sample "roll" string: 6 blue, 7 red, 11 green
-    for roll in rolls_original:
-
+    for roll in current_game_rolls:
+        
         red_search = re.search(r'(\d+) red', roll)
         green_search = re.search(r'(\d+) green', roll)
         blue_search = re.search(r'(\d+) blue', roll)
@@ -60,27 +42,25 @@ def get_game_rolls(game):
             blue_value = int(blue_search.group(1))
         else:
             blue_value = 0
-
-        roll_object['blue']  = blue_value
-        roll_object['green'] = green_value
-        roll_object['red']   = red_value
         
-        rolls.append(roll_object)
+        game_object['rolls'].append({
+            'red': red_value,
+            'green': green_value,
+            'blue': blue_value
+        })
 
-    return rolls
+        games.append(game_object)
 
-for input_game in puzzle_data:
+for game in games:
+    for roll in game['rolls']:
+        if roll['red'] <= RED_MAX and roll['green'] <= GREEN_MAX and roll['blue'] <= BLUE_MAX:
+            continue
+        else:
+            impossible_game_ids.append(game['game_id'])
 
-    game_object = {
-        'game_id':  get_game_id(input_game),    # int
-        'rolls':    get_game_rolls(input_game)  # list of roll objects
-    }
-
-    games.append(game_object)
-
-print(f"total games played: {len(games)}")
-
-# just printing the last game while I debug the rolls all being the same
-print(games[-1])
-
-print(f"possible_game_ids: {possible_game_ids}")
+possible_game_ids = list(set([game['game_id'] for game in games if game['game_id'] not in impossible_game_ids]))
+solution = sum(possible_game_ids)
+# uniq the possible game IDs
+#possible_game_ids = list(set(possible_game_ids))
+print(f"possible game IDs: {possible_game_ids}")
+print(f"sum of possible game IDs: {solution}")
