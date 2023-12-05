@@ -13,10 +13,10 @@ games = []
 # list of IDs of games that are impossible
 impossible_game_ids = []
 
-for game_id, game in enumerate(puzzle_data, start=1):
+for game in puzzle_data:
     
     game_object = {
-        'game_id': game_id,
+        'game_id': int(game.split(':')[0].split(' ')[1]),
         'rolls': []
     }
     
@@ -57,9 +57,14 @@ for game in games:
         else:
             impossible_game_ids.append(game['game_id'])
 
+# the list(set()) is to uniq the list
 possible_game_ids = list(set([game['game_id'] for game in games if game['game_id'] not in impossible_game_ids]))
-solution = sum(possible_game_ids)
-# uniq the possible game IDs
-#possible_game_ids = list(set(possible_game_ids))
-print(f"possible game IDs: {possible_game_ids}")
-print(f"sum of possible game IDs: {solution}")
+
+part_1_solution = sum(possible_game_ids)
+
+print(f'Possible game IDs: {possible_game_ids}')
+
+print(f'possible game id: {possible_game_ids[0]}')
+
+test_id = possible_game_ids[0] # 3
+print(games[test_id - 1])
