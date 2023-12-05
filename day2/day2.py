@@ -1,5 +1,4 @@
 import regex as re
-import json
 
 with open('./puzzle-input-day2.txt') as file:
     puzzle_data = [line.strip() for line in file]
