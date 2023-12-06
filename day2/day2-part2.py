@@ -80,21 +80,8 @@ for id in possible_game_ids:
     print(f"Game {current_game['game_id']} requires at least {min_red} red, {min_green} green, and {min_blue} blue dice")
     print(f"Power value: {power_value}")
 
-for game in games:
-    # get the minimum number of red, green, and blue dice
-    min_red     = max([roll['red'] for roll in game['rolls']])
-    min_green   = max([roll['green'] for roll in game['rolls']])
-    min_blue    = max([roll['blue'] for roll in game['rolls']])
-
-    power_value = min_red * min_green * min_blue
-    
-    all_power_list.append(power_value)
-
-    print(f"Game {game['game_id']} requires at least {min_red} red, {min_green} green, and {min_blue} blue dice")
-    print(f"Power value: {power_value}")
-
 part_2_solution_full = sum(all_power_list)
-
 part_2_solution = sum(possible_power_list)
-print(possible_power_list)
-print(f"Part 2 solution: {part_2_solution_full}")
+
+print(f"All powers summed: {part_2_solution_full}")
+print(f"Possible powers summed: {part_2_solution}")
