@@ -122,14 +122,22 @@ copies = []
 
 print("original card list:")
 for game_offset, game in enumerate(games):
-    print(game_number, ':', game)
-    
-    copies.append(game) # this should execute every time on the first iteration
-    
 
-    for x in range(game['matches']):
-        # LEFT OFF HERE
-        pass
+    print(game_offset, ':', game)
+
+    # every game's original copy is added to the copies list
+    
+    
+    num_matches = game['matches'] # determines how many games I won copies of
+    num_copies = game['copies'] # determines how many copies of the gam
+    
+    # append the current game to the copies list 'num_copies' times
+    for x in range(num_copies):
+        copies.append(game)
+    
+    # increment the number of copies of the next 'num_matches' cards
+    for y in range(num_matches):
+        games[game_offset+y]['copies'] += 1
 
 # this is the list of all copies
 # the length will end up being the solution to the puzzle
